@@ -77,12 +77,9 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
-if settings.DEBUG:  # μόνο σε development
-    FRONTEND_DIST = (BASE_DIR.parent / 'frontend' / 'dist').resolve()
-    print(">> FRONTEND_DIST =", FRONTEND_DIST)  # προσωρινό debug
-    STATICFILES_DIRS = [FRONTEND_DIST]
-else:
-    STATICFILES_DIRS = [BASE_DIR / 'static'] 
+
+_static_dir = BASE_DIR / "static"
+STATICFILES_DIRS = [_static_dir] if _static_dir.exists() else []
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.getenv("MEDIA_ROOT", BASE_DIR / "media")
