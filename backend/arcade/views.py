@@ -3,8 +3,11 @@ from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, Http
 from django.views.decorators.csrf import csrf_exempt
 from .models import Game, HighScore
 
+
 def health(request):
-    return HttpResponse("ok")
+    return JsonResponse({"status": "ok"})
+
+
 
 def serialize_game(g: Game):
     return {
