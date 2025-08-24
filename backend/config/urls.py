@@ -1,10 +1,10 @@
-from django.contrib import admin
-from django.urls import path
-from arcade import views as arcade_views
+from django.urls import path, re_path
+from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/games/', arcade_views.games_list, name='games_list'),
-    path('api/games/<slug:slug>/', arcade_views.game_detail, name='game_detail'),
-    path('api/highscores/', arcade_views.highscores_endpoint, name='highscores'),
+    # ... τα υπάρχοντα urls σου (admin, api, κλπ.)
+    path("", TemplateView.as_view(template_name="index.html")),
+    # SPA fallback για οποιοδήποτε άλλο path (εκτός από api/static)
+    re_path(r'^(?!api|admin|static/).*$',
+            TemplateView.as_view(template_name="index.html")),
 ]
