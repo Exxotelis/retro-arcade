@@ -39,11 +39,11 @@ export default function Games(){
   const [activeTitle, setActiveTitle] = useState("Browse the Arcade")
 
   // Lock body scroll when any modal is open
-  useEffect(()=>{
-    const anyOpen = showPong || showBreakout || showPacman
-    document.body.style.overflow = anyOpen ? "hidden" : ""
+    useEffect(()=>{
+    const anyOpen = showPong || showBreakout || showPacman || showChicken; // ✅ πρόσθεσε showChicken
+    document.body.style.overflow = anyOpen ? "hidden" : "";
     return ()=>{ document.body.style.overflow = "" }
-  }, [showPong, showBreakout, showPacman])
+    }, [showPong, showBreakout, showPacman, showChicken]);
 
   // Local slides only
   const slides = useMemo(()=>[

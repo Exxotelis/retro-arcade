@@ -13,7 +13,7 @@ export default function App(){
     <>
       <Header query={q} setQuery={setQ} />
       <main>
-        <Games query={q} />
+        <Games />
         <About />
         <Contact />
       </main>

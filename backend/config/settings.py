@@ -1,4 +1,4 @@
-# settings.py (env-driven prod/dev)
+# settings.py — OPEN MODE for 2 services (frontend: dynamitis.com, backend: Railway subdomain)
 import os
 from pathlib import Path
 
@@ -16,31 +16,32 @@ def env_list(key: str, default: str = "") -> list[str]:
     raw = os.environ.get(key, default)
     return [item.strip() for item in raw.split(",") if item.strip()]
 
-# ---------- Core ----------
-SECRET_KEY = "p7$@m4(suv_co#3yj@7)7=s^!&5#nq93!4i2lw_qkog3k-n&k0"
-DEBUG = True
-ALLOWED_HOSTS = ["*"]
+# ---------- Core (OPEN defaults) ----------
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-unsafe")
+DEBUG = env_bool("DJANGO_DEBUG", True)
 
-# CSRF trusted origins (full scheme required, e.g. https://example.com)
-CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "")
+# Open now (allow everything) but include your domains for clarity
+ALLOWED_HOSTS = env_list(
+    "DJANGO_ALLOWED_HOSTS",
+    "*.up.railway.app,dynamitis.com,www.dynamitis.com,*"
+)
 
-# CORS (frontend σε άλλο domain)
+# CORS/CSRF — OPEN now (no specific origins). Lock down later via env.
+CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL_ORIGINS", True)
 CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", "")
 CORS_ALLOW_CREDENTIALS = env_bool("CORS_ALLOW_CREDENTIALS", False)
+CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "")
 
-# Security toggles (set in production)
+# Security toggles (OFF now; enable later)
 SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", False)
-# honor X-Forwarded-Proto from Railway/Reverse proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-# Cookies secure when running behind HTTPS (production)
 SESSION_COOKIE_SECURE = SECURE_SSL_REDIRECT or env_bool("SESSION_COOKIE_SECURE", False)
 CSRF_COOKIE_SECURE   = SECURE_SSL_REDIRECT or env_bool("CSRF_COOKIE_SECURE", False)
 
-# Frame options (default SAMEORIGIN; override via env if you must embed)
+# Frame policy: open in DEBUG, same-origin in prod (override via DJANGO_X_FRAME_OPTIONS if needed)
 X_FRAME_OPTIONS = os.environ.get(
     "DJANGO_X_FRAME_OPTIONS",
-    "SAMEORIGIN" if not DEBUG else "ALLOWALL"
+    "ALLOWALL" if DEBUG else "SAMEORIGIN"
 )
 
 # ---------- Apps ----------
@@ -54,15 +55,15 @@ INSTALLED_APPS = [
 
     "arcade",
 
-    "corsheaders",  
+    "corsheaders",  # CORS for cross-origin frontend
 ]
 
 # ---------- Middleware ----------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",   # static files σε production
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 
-    # CORS: όσο πιο ψηλά γίνεται, πριν το CommonMiddleware
+    # CORS must be high (before CommonMiddleware)
     "corsheaders.middleware.CorsMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -81,7 +82,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        # Αν σερβίρεις SPA από Django, βάλε εδώ BASE_DIR / "templates"
+        # keep for future (unused when SPA is separate)
         "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -95,7 +96,7 @@ TEMPLATES = [
     },
 ]
 
-# ---------- Database (SQLite by default) ----------
+# ---------- Database (SQLite) ----------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -103,7 +104,6 @@ DATABASES = {
     }
 }
 
-# ---------- Password validation (adjust as needed) ----------
 AUTH_PASSWORD_VALIDATORS = []
 
 # ---------- I18N ----------
@@ -112,14 +112,16 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# ---------- Static files ----------
+# ---------- Static ----------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]  # αν δεν υπάρχει, κράτα το "static" folder κενό ή αφαίρεσέ το
 
-# WhiteNoise: hashed + compressed files in production
+# Include app/static only if it exists (avoids errors if folder is missing)
+_static_dir = BASE_DIR / "static"
+STATICFILES_DIRS = [_static_dir] if _static_dir.exists() else []
+
+# WhiteNoise for production
 if not DEBUG:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# ---------- Defaults ----------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
