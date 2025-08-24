@@ -98,7 +98,7 @@ export default function Games(){
               {item.type === 'local-chicken' && (
                 <SlideCard {...item} onPlay={()=>setShowChicken(true)} />
                 )}
-                <img src={img || asset("images/placeholder.jpg")} alt={title} loading="lazy" />
+               
 
             </SwiperSlide>
           ))}
