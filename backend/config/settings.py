@@ -1,7 +1,8 @@
-# settings.py (updated for env-driven prod/dev)
+# settings.py (env-driven prod/dev)
 import os
 from pathlib import Path
 
+# ---------- Paths ----------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ---------- Helpers ----------
@@ -20,8 +21,12 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key")
 DEBUG = env_bool("DJANGO_DEBUG", True)
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "*" if DEBUG else "")
 
-# CSRF trusted origins (comma-separated, full scheme required, e.g. https://*.up.railway.app)
+# CSRF trusted origins (full scheme required, e.g. https://example.com)
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "")
+
+# CORS (frontend σε άλλο domain)
+CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", "")
+CORS_ALLOW_CREDENTIALS = env_bool("CORS_ALLOW_CREDENTIALS", False)
 
 # Security toggles (set in production)
 SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", False)
@@ -30,11 +35,15 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Cookies secure when running behind HTTPS (production)
 SESSION_COOKIE_SECURE = SECURE_SSL_REDIRECT or env_bool("SESSION_COOKIE_SECURE", False)
-CSRF_COOKIE_SECURE = SECURE_SSL_REDIRECT or env_bool("CSRF_COOKIE_SECURE", False)
+CSRF_COOKIE_SECURE   = SECURE_SSL_REDIRECT or env_bool("CSRF_COOKIE_SECURE", False)
 
-# Frame options: default to SAMEORIGIN in prod; override via env if you must embed
-X_FRAME_OPTIONS = os.environ.get("DJANGO_X_FRAME_OPTIONS", "SAMEORIGIN" if not DEBUG else "ALLOWALL")
+# Frame options (default SAMEORIGIN; override via env if you must embed)
+X_FRAME_OPTIONS = os.environ.get(
+    "DJANGO_X_FRAME_OPTIONS",
+    "SAMEORIGIN" if not DEBUG else "ALLOWALL"
+)
 
+# ---------- Apps ----------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -42,13 +51,20 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "arcade",
-    "corsheaders",  
+
+    "corsheaders",  # CORS για frontend σε άλλο origin
 ]
 
+# ---------- Middleware ----------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  
+    "whitenoise.middleware.WhiteNoiseMiddleware",   # static files σε production
+
+    # CORS: όσο πιο ψηλά γίνεται, πριν το CommonMiddleware
+    "corsheaders.middleware.CorsMiddleware",
+
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -57,11 +73,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# ---------- URLs / WSGI ----------
 ROOT_URLCONF = "config.urls"
+WSGI_APPLICATION = "config.wsgi.application"
 
+# ---------- Templates ----------
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
+        # Αν σερβίρεις SPA από Django, βάλε εδώ BASE_DIR / "templates"
         "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -75,8 +95,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "config.wsgi.application"
-
 # ---------- Database (SQLite by default) ----------
 DATABASES = {
     "default": {
@@ -85,20 +103,23 @@ DATABASES = {
     }
 }
 
+# ---------- Password validation (adjust as needed) ----------
 AUTH_PASSWORD_VALIDATORS = []
 
+# ---------- I18N ----------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# ---------- Static ----------
+# ---------- Static files ----------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "static"]  # αν δεν υπάρχει, κράτα το "static" folder κενό ή αφαίρεσέ το
 
 # WhiteNoise: hashed + compressed files in production
 if not DEBUG:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# ---------- Defaults ----------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
