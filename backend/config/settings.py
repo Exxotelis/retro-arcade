@@ -2,6 +2,8 @@
 import os
 from pathlib import Path
 
+from django.conf import settings
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Core (open for now) ---
@@ -72,14 +74,17 @@ USE_TZ = True
 
 # --- Static / WhiteNoise ---
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"  # εκεί θα γράφει collectstatic
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
-# Προαιρετικός local φάκελος /static αν τον χρησιμοποιείς
-_static_dir = BASE_DIR / "static"
-STATICFILES_DIRS = [_static_dir] if _static_dir.exists() else []
+if settings.DEBUG:  # μόνο σε development
+    FRONTEND_DIST = (BASE_DIR.parent / 'frontend' / 'dist').resolve()
+    print(">> FRONTEND_DIST =", FRONTEND_DIST)  # προσωρινό debug
+    STATICFILES_DIRS = [FRONTEND_DIST]
+else:
+    STATICFILES_DIRS = [BASE_DIR / 'static'] 
 
-# Σε production, hashed + compressed static files
-if not DEBUG:
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.getenv("MEDIA_ROOT", BASE_DIR / "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
