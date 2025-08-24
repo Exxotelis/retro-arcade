@@ -38,6 +38,8 @@ export default function Games(){
   // Page title based on selected slide
   const [activeTitle, setActiveTitle] = useState("Browse the Arcade")
 
+  const asset = (p) => `${import.meta.env.BASE_URL}${p.replace(/^\/+/, "")}`;
+
   // Lock body scroll when any modal is open
     useEffect(()=>{
     const anyOpen = showPong || showBreakout || showPacman || showChicken; // ✅ πρόσθεσε showChicken
@@ -46,12 +48,12 @@ export default function Games(){
     }, [showPong, showBreakout, showPacman, showChicken]);
 
   // Local slides only
-  const slides = useMemo(()=>[
-    { type:"local-pong",     title:"PONG (Local)",    subtitle:"HTML5/Canvas", img:"/images/pong.jpg" },
-    { type:"local-breakout", title:"Breakout (Local)",subtitle:"React/Canvas", img:"/images/breakout.jpg" },
-    { type:"local-pacman",   title:"Pacman (Local)",  subtitle:"React/Canvas", img:"/images/pacman.jpg" },
-    { type:"local-chicken",  title:"Chicken Run (Local)", subtitle:"React/Canvas", img:"/images/chicken.jpg" },
-  ],[])
+    const slides = useMemo(() => [
+    { type:"local-pong",     title:"PONG (Local)",      subtitle:"HTML5/Canvas", img: asset("images/pong.jpg") },
+    { type:"local-breakout", title:"Breakout (Local)",  subtitle:"React/Canvas", img: asset("images/breakout.jpg") },
+    { type:"local-pacman",   title:"Pacman (Local)",    subtitle:"React/Canvas", img: asset("images/pacman.jpg") },
+    { type:"local-chicken",  title:"Chicken Run (Local)", subtitle:"React/Canvas", img: asset("images/chicken.jpg") },
+    ], []);
 
   return (
     <section id="home" className="section section--tight fullbleed">
@@ -92,6 +94,8 @@ export default function Games(){
               {item.type === 'local-chicken' && (
                 <SlideCard {...item} onPlay={()=>setShowChicken(true)} />
                 )}
+                <img src={img || asset("images/placeholder.jpg")} alt={title} loading="lazy" />
+
             </SwiperSlide>
           ))}
         </Swiper>
