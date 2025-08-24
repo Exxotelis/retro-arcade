@@ -17,9 +17,9 @@ def env_list(key: str, default: str = "") -> list[str]:
     return [item.strip() for item in raw.split(",") if item.strip()]
 
 # ---------- Core ----------
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key")
-DEBUG = env_bool("DJANGO_DEBUG", True)
-ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "*" if DEBUG else "")
+SECRET_KEY = "p7$@m4(suv_co#3yj@7)7=s^!&5#nq93!4i2lw_qkog3k-n&k0"
+DEBUG = True
+ALLOWED_HOSTS = ["*"]
 
 # CSRF trusted origins (full scheme required, e.g. https://example.com)
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "")
@@ -54,7 +54,7 @@ INSTALLED_APPS = [
 
     "arcade",
 
-    "corsheaders",  # CORS για frontend σε άλλο origin
+    "corsheaders",  
 ]
 
 # ---------- Middleware ----------
