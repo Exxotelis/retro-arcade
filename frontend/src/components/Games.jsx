@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import PongModal from "./PongModal.jsx"
 import BreakoutModal from "./BreakoutModal.jsx"
-import { PacmanModal } from "./PacmanModal.jsx"
+import PacmanModal  from "./PacmanModal.jsx"
 import ChickenModal from "./ChickenModal.jsx";
 
 import { Swiper, SwiperSlide } from "swiper/react"
