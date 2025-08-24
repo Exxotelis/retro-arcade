@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 5173,
       proxy: {
-        "/api": "http://localhost:8000", // μόνο dev
+        "/api": "http://localhost:8080", // μόνο dev
       },
     },
     build: {

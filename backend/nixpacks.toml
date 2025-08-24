@@ -1,7 +1,9 @@
 # backend/nixpacks.toml
-providers = ["python", "node"]
+# ΜΟΝΟ python provider -> δεν εγκαθιστά δικό του Node/NPM ο Nixpacks
+providers = ["python"]
 
 [phases.setup]
+# Εγκαθιστούμε ΜΙΑ φορά Node 20 από nixpkgs για να χτίσουμε το Vite
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
@@ -12,12 +14,12 @@ commands = [
 
 [phases.build]
 commands = [
-  # Build Vite
+  # Build του Vite SPA
   "cd ../frontend && npm run build",
   # Αντιγραφή assets στο Django static
   "rm -rf static/spa && mkdir -p static/spa",
   "cp -r ../frontend/dist/assets static/spa/",
-  # Γράφουμε index.html στα templates και αλλάζουμε paths των assets -> /static/spa/assets/
+  # Γράφουμε index.html στα templates με rewrite των assets σε /static/spa/assets/
   "mkdir -p templates",
   "sed 's|/assets/|/static/spa/assets/|g' ../frontend/dist/index.html > templates/index.html",
 
