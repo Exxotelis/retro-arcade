@@ -12,6 +12,7 @@ import "swiper/css/effect-coverflow"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 
+const asset = (p) => `${import.meta.env.BASE_URL}${p.replace(/^\/+/, "")}`;
 
 function SlideCard({ title, subtitle, img, onPlay }) {
   // img πρέπει να είναι ΣΧΕΤΙΚΟ path: "images/pong.jpg"
