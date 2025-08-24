@@ -1,9 +1,12 @@
 import json
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotAllowed
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.views.decorators.csrf import csrf_exempt
 from .models import Game, HighScore
 
-def serialize_game(g):
+def health(request):
+    return HttpResponse("ok")
+
+def serialize_game(g: Game):
     return {
         "id": g.id,
         "title": g.title,
@@ -17,8 +20,8 @@ def serialize_game(g):
 def games_list(request):
     if request.method != "GET":
         return HttpResponseNotAllowed(["GET"])
-    games = Game.objects.filter(is_public=True).order_by("title")
-    return JsonResponse({"results": [serialize_game(g) for g in games]})
+    qs = Game.objects.filter(is_public=True).order_by("title")
+    return JsonResponse({"results": [serialize_game(g) for g in qs]})
 
 def game_detail(request, slug):
     if request.method != "GET":
@@ -29,7 +32,7 @@ def game_detail(request, slug):
         return JsonResponse({"detail": "Not found"}, status=404)
     return JsonResponse(serialize_game(g))
 
-@csrf_exempt
+@csrf_exempt  # προσωρινά open-mode αν κάνεις POST από άλλο origin χωρίς CSRF
 def highscores_endpoint(request):
     if request.method == "GET":
         slug = request.GET.get("game")
@@ -37,25 +40,35 @@ def highscores_endpoint(request):
         if slug:
             qs = qs.filter(game__slug=slug)
         data = [
-            {"game": hs.game.slug, "user_name": hs.user_name, "score": hs.score, "created": hs.created.isoformat()}
+            {
+                "game": hs.game.slug,
+                "user_name": hs.user_name,
+                "score": hs.score,
+                "created": hs.created.isoformat(),
+            }
             for hs in qs.order_by("-score")[:100]
         ]
         return JsonResponse({"results": data})
 
     if request.method == "POST":
         try:
-            body = json.loads(request.body.decode('utf-8'))
+            body = json.loads(request.body.decode("utf-8"))
         except Exception:
             return HttpResponseBadRequest("Invalid JSON")
+
         game_slug = body.get("game")
         user_name = body.get("user_name")
         score = body.get("score")
-        if not all([game_slug, user_name, isinstance(score, int)]):
+
+        if not (game_slug and user_name and isinstance(score, int)):
             return HttpResponseBadRequest("Missing fields: game, user_name, score(int)")
+
         try:
             game = Game.objects.get(slug=game_slug, is_public=True)
         except Game.DoesNotExist:
             return HttpResponseBadRequest("Invalid game")
+
         HighScore.objects.create(game=game, user_name=user_name, score=score)
         return JsonResponse({"ok": True})
+
     return HttpResponseNotAllowed(["GET", "POST"])
