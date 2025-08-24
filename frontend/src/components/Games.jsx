@@ -13,14 +13,20 @@ import "swiper/css/navigation"
 import "swiper/css/pagination"
 
 
-// -- Simple slide card (thumbnail + play) --
-function SlideCard({ title, subtitle, img, onPlay }){
-      const src = /^https?:\/\//.test(img || "")
+function SlideCard({ title, subtitle, img, onPlay }) {
+  // img πρέπει να είναι ΣΧΕΤΙΚΟ path: "images/pong.jpg"
+  const src = /^https?:\/\//.test(img || "")
     ? img
     : asset((img || "images/placeholder.jpg").replace(/^\/+/, ""));
+
   return (
     <div className="slide-card">
-      <img src={img || "/images/3.jpg"} alt={title} />
+      <img
+        src={src}
+        alt={title}
+        loading="lazy"
+        onError={(e) => { e.currentTarget.src = asset("images/placeholder.jpg"); }}
+      />
       <div className="slide-meta">
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:8}}>
           <span className="slide-title">{title}</span>
@@ -29,7 +35,7 @@ function SlideCard({ title, subtitle, img, onPlay }){
         <button className="play-btn" onClick={onPlay}>▶ Play</button>
       </div>
     </div>
-  )
+  );
 }
 
 export default function Games(){
