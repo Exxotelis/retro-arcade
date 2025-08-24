@@ -11,6 +11,10 @@ import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
+import pong from "/images/pong.jpg";
+import breakout from "/images/breakout.jpg";
+import pacman from "/images/pacman.jpg";
+import chicken from "/images/chicken.jpg";
 
 // -- Simple slide card (thumbnail + play) --
 function SlideCard({ title, subtitle, img, onPlay }){
@@ -38,7 +42,7 @@ export default function Games(){
   // Page title based on selected slide
   const [activeTitle, setActiveTitle] = useState("Browse the Arcade")
 
-  const asset = (p) => `${import.meta.env.BASE_URL}${p.replace(/^\/+/, "")}`;
+
 
   // Lock body scroll when any modal is open
     useEffect(()=>{
@@ -49,10 +53,10 @@ export default function Games(){
 
   // Local slides only
     const slides = useMemo(() => [
-    { type:"local-pong",     title:"PONG (Local)",      subtitle:"HTML5/Canvas", img: asset("images/pong.jpg") },
-    { type:"local-breakout", title:"Breakout (Local)",  subtitle:"React/Canvas", img: asset("images/breakout.jpg") },
-    { type:"local-pacman",   title:"Pacman (Local)",    subtitle:"React/Canvas", img: asset("images/pacman.jpg") },
-    { type:"local-chicken",  title:"Chicken Run (Local)", subtitle:"React/Canvas", img: asset("images/chicken.jpg") },
+    { type:"local-pong",     title:"PONG (Local)",      subtitle:"HTML5/Canvas", img: pong },
+    { type:"local-breakout", title:"Breakout (Local)",  subtitle:"React/Canvas", img: breakout },
+    { type:"local-pacman",   title:"Pacman (Local)",    subtitle:"React/Canvas", img: pacman },
+    { type:"local-chicken",  title:"Chicken Run (Local)", subtitle:"React/Canvas", img: chicken },
     ], []);
 
   return (
