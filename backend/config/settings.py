@@ -18,13 +18,10 @@ def env_list(key: str, default: str = "") -> list[str]:
 
 # ---------- Core (OPEN defaults for now) ----------
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-unsafe")
-DEBUG = env_bool("DJANGO_DEBUG", True)
+DEBUG = True
 
 # Αφήνουμε ανοιχτά τώρα (θα το κλειδώσουμε μετά με envs)
-ALLOWED_HOSTS = env_list(
-    "DJANGO_ALLOWED_HOSTS",
-    "*.up.railway.app,dynamitis.com,www.dynamitis.com,*"
-)
+ALLOWED_HOSTS = ["*"]
 
 # CORS/CSRF — OPEN τώρα (χωρίς λίστες). Θα μπουν συγκεκριμένα origins αργότερα.
 CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL_ORIGINS", True)
