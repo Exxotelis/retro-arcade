@@ -12,24 +12,17 @@ import "swiper/css/effect-coverflow"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 
-// >>> Import εικόνων από src/assets (όχι από public)
+// Import εικόνων από src/assets
 import imgPong     from "../assets/images/pong.jpg"
 import imgBreakout from "../assets/images/breakout.jpg"
 import imgPacman   from "../assets/images/pacman.jpg"
 import imgChicken  from "../assets/images/chicken.jpg"
-// import imgFallback from "../assets/images/placeholder.jpg"
 
 function SlideCard({ title, subtitle, img, onPlay }) {
-  // το img είναι ΗΔΗ τελικό URL που έδωσε ο Vite (με σωστό base), δεν το πειράζουμε
-  const src = img
+  const src = img // το Vite δίνει τελικό URL με σωστό base
   return (
     <div className="slide-card">
-      <img
-        src={src}
-        alt={title}
-        loading="lazy"
-        // onError={(e)=>{ e.currentTarget.src = imgFallback }}
-      />
+      <img src={src} alt={title} loading="lazy" />
       <div className="slide-meta">
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:8}}>
           <span className="slide-title">{title}</span>
@@ -48,19 +41,24 @@ export default function Games(){
   const [showChicken, setShowChicken] = useState(false)
   const [activeTitle, setActiveTitle] = useState("Browse the Arcade")
 
+  // Κλειδώνουμε το scroll όταν ανοίγει modal
   useEffect(()=>{
     const anyOpen = showPong || showBreakout || showPacman || showChicken
     document.body.style.overflow = anyOpen ? "hidden" : ""
     return ()=>{ document.body.style.overflow = "" }
   }, [showPong, showBreakout, showPacman, showChicken])
 
-  // Χρησιμοποιούμε τα imported URLs ως έχουν
+  // Slides
   const slides = useMemo(() => ([
     { type:"local-pong",     title:"PONG (Local)",        subtitle:"HTML5/Canvas",  img: imgPong },
     { type:"local-breakout", title:"Breakout (Local)",    subtitle:"React/Canvas",  img: imgBreakout },
     { type:"local-pacman",   title:"Pacman (Local)",      subtitle:"React/Canvas",  img: imgPacman },
     { type:"local-chicken",  title:"Chicken Run (Local)", subtitle:"React/Canvas",  img: imgChicken },
   ]), [])
+
+  // Swiper helpers (έξω από το return, όχι μέσα στο JSX)
+  const canLoop = slides.length >= 5 // με 4 slides κρατάμε loop off για να μη βγάζει warning
+  const anyOpen = showPong || showBreakout || showPacman || showChicken
 
   return (
     <section id="home" className="section section--tight fullbleed">
@@ -75,15 +73,16 @@ export default function Games(){
           effect="coverflow"
           grabCursor
           centeredSlides
-          slidesPerView="auto"
-          loop
-          loopAdditionalSlides={3}
-            breakpoints={{
-              0:   { slidesPerView: 1.2, spaceBetween: 12 },
-              480: { slidesPerView: 1.6, spaceBetween: 14 },
-              768: { slidesPerView: 2.2, spaceBetween: 16 },
-              1024:{ slidesPerView: 3,   spaceBetween: 20 }
-            }}
+          slidesPerView={3}
+          breakpoints={{
+            0:    { slidesPerView: 1.2, spaceBetween: 12 },
+            480:  { slidesPerView: 1.6, spaceBetween: 14 },
+            768:  { slidesPerView: 2.2, spaceBetween: 16 },
+            1024: { slidesPerView: 3,   spaceBetween: 20 },
+          }}
+          loop={canLoop}
+          loopAdditionalSlides={2}
+          allowTouchMove={!anyOpen} // πάγωμα όταν modal ανοιχτό
           coverflowEffect={{ rotate:0, stretch:0, depth:180, modifier:1.2, slideShadows:false }}
           navigation
           pagination={{ clickable:true }}
@@ -94,7 +93,7 @@ export default function Games(){
           }}
         >
           {slides.map((item, idx) => (
-            <SwiperSlide key={idx} style={{ width: 280 }}>
+            <SwiperSlide key={idx}>
               {item.type === 'local-pong'     && <SlideCard {...item} onPlay={()=>setShowPong(true)} />}
               {item.type === 'local-breakout' && <SlideCard {...item} onPlay={()=>setShowBreakout(true)} />}
               {item.type === 'local-pacman'   && <SlideCard {...item} onPlay={()=>setShowPacman(true)} />}
@@ -104,6 +103,7 @@ export default function Games(){
         </Swiper>
       </div>
 
+      {/* Modals */}
       <PongModal open={showPong} onClose={()=>{
         setShowPong(false)
         setTimeout(()=>{ document.getElementById('home')?.scrollIntoView({behavior:'smooth'}); window.location.hash='#home' }, 0)

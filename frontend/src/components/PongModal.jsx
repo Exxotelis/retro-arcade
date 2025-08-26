@@ -3,43 +3,44 @@ import React, { useEffect, useRef } from "react"
 export default function PongModal({ open, onClose }) {
   const containerRef = useRef(null)
 
-useEffect(() => {
-  if (!open) return
-  const canvas = document.createElement("canvas")
-  canvas.id = "pong"
-  canvas.style.width = "100%"
-  canvas.style.height = "100%"
+  useEffect(() => {
+    if (!open) return
+    const canvas = document.createElement("canvas")
+    canvas.id = "pong"
+    canvas.style.width = "100%"
+    canvas.style.height = "100%"
 
-  const resize = () => {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
-    const rect = containerRef.current.getBoundingClientRect()
-    canvas.width = rect.width * dpr
-    canvas.height = rect.height * dpr
-    const ctx = canvas.getContext("2d")
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-  }
-  resize()
-  window.addEventListener("resize", resize)
-  containerRef.current.innerHTML = ""
-  containerRef.current.appendChild(canvas)
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const rect = containerRef.current.getBoundingClientRect()
+      canvas.width = rect.width * dpr
+      canvas.height = rect.height * dpr
+      const ctx = canvas.getContext("2d")
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+    resize()
+    window.addEventListener("resize", resize)
 
-  const s = document.createElement("script")
-  s.src = "/pong.js"
-  s.async = true
-  containerRef.current.appendChild(s)
+    containerRef.current.innerHTML = ""
+    containerRef.current.appendChild(canvas)
 
-  return () => {
-    window.removeEventListener("resize", resize)
-    if (containerRef.current) containerRef.current.innerHTML = ""
-  }
+    // φορτώνουμε το script από το σωστό base
+    const s = document.createElement("script")
+    const base = import.meta.env.BASE_URL || "/"
+    s.src = `${base}pong.js`
+    s.async = true
+    containerRef.current.appendChild(s)
+
+    return () => {
+      window.removeEventListener("resize", resize)
+      if (containerRef.current) containerRef.current.innerHTML = ""
+    }
   }, [open])
 
   if (!open) return null
 
   const closeAndGoHome = () => {
-    // 1) κλείσε το modal
     onClose?.()
-    // 2) redirect/scroll στο Home
     setTimeout(() => {
       const el = document.getElementById('home')
       if (el) el.scrollIntoView({ behavior: 'smooth' })
