@@ -3,28 +3,35 @@ import React, { useEffect, useRef } from "react"
 export default function PongModal({ open, onClose }) {
   const containerRef = useRef(null)
 
-  useEffect(() => {
-    if (!open) return
-    // φτιάξε το canvas που περιμένει το pong.js
-    const canvas = document.createElement("canvas")
-    canvas.id = "pong"
-    canvas.width = 640
-    canvas.height = 400
-    canvas.style.width = "100%"
-    canvas.style.height = "auto"
-    containerRef.current.innerHTML = ""
-    containerRef.current.appendChild(canvas)
+useEffect(() => {
+  if (!open) return
+  const canvas = document.createElement("canvas")
+  canvas.id = "pong"
+  canvas.style.width = "100%"
+  canvas.style.height = "100%"
 
-    // φόρτωσε το script
-    const s = document.createElement("script")
-    s.src = "/pong.js"
-    s.async = true
-    containerRef.current.appendChild(s)
+  const resize = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const rect = containerRef.current.getBoundingClientRect()
+    canvas.width = rect.width * dpr
+    canvas.height = rect.height * dpr
+    const ctx = canvas.getContext("2d")
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+  }
+  resize()
+  window.addEventListener("resize", resize)
+  containerRef.current.innerHTML = ""
+  containerRef.current.appendChild(canvas)
 
-    return () => {
-      // cleanup
-      if (containerRef.current) containerRef.current.innerHTML = ""
-    }
+  const s = document.createElement("script")
+  s.src = "/pong.js"
+  s.async = true
+  containerRef.current.appendChild(s)
+
+  return () => {
+    window.removeEventListener("resize", resize)
+    if (containerRef.current) containerRef.current.innerHTML = ""
+  }
   }, [open])
 
   if (!open) return null

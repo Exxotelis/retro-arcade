@@ -157,3 +157,27 @@ body{margin:0;background:#000;color:#e8eaf0;font-family:system-ui,-apple-system,
   }
   .search { justify-content: center; }       /* search στο κέντρο */
 }
+
+/* Mobile tuning */
+@media (max-width: 768px) {
+  .slide-card {
+    width: 80vw;
+    height: 60vh;
+  }
+  .modal-surface {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    max-height: none;
+  }
+  .modal-body {
+    padding: 0;
+    height: calc(100vh - 60px); /* αφήνει header */
+  }
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}

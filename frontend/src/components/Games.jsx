@@ -78,6 +78,12 @@ export default function Games(){
           slidesPerView="auto"
           loop
           loopAdditionalSlides={3}
+            breakpoints={{
+              0:   { slidesPerView: 1.2, spaceBetween: 12 },
+              480: { slidesPerView: 1.6, spaceBetween: 14 },
+              768: { slidesPerView: 2.2, spaceBetween: 16 },
+              1024:{ slidesPerView: 3,   spaceBetween: 20 }
+            }}
           coverflowEffect={{ rotate:0, stretch:0, depth:180, modifier:1.2, slideShadows:false }}
           navigation
           pagination={{ clickable:true }}
