@@ -1,7 +1,8 @@
+// vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: '/static/spa/',   
-})
+  base: command === 'serve' ? '/' : '/static/spa/', // dev -> '/', build -> '/static/spa/'
+}))

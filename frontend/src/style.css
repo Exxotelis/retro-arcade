@@ -223,3 +223,63 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
   /* Keep visuals centered */
   .about-visual{ display:flex; align-items:center; justify-content:center }
 }
+
+/* --- Reflection for slide cards --- */
+.slide-card{
+  position: relative;
+  width: 280px; height: 380px; /* ή ό,τι έχεις ήδη */
+  border-radius: 18px;
+  /* μην κρύβεις το reflection - θα το χειριστούμε μέσα */
+  overflow: visible; 
+}
+
+.slide-card .cover{
+  position: relative;
+  width: 100%; height: 100%;
+  border-radius: 18px; 
+  overflow: hidden;              /* στρογγυλεμένες γωνίες μόνο στο κύριο cover */
+  background:#0e1422;
+  border:1px solid var(--border);
+  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+}
+
+.cover-img{
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+/* Η αντανάκλαση «κάτω από» το cover */
+.reflection{
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  height: 35%;                   /* πόσο ψηλή θες την αντανάκλαση */
+  transform: scaleY(-1);
+  overflow: hidden;
+  pointer-events: none;
+  opacity: .28;                  /* ένταση αντανάκλασης */
+}
+
+/* Το ίδιο image, καθρεφτισμένο */
+.reflection .cover-img{
+  width: 100%; height: 100%; object-fit: cover; display:block;
+  filter: blur(0.4px);           /* πολύ ελαφρύ blur για ρεαλισμό */
+}
+
+/* Σβήσιμο προς τα κάτω */
+.reflection .reflection-fade{
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.85) 80%, rgba(0,0,0,1));
+}
+
+/* Να μην «κόβει» το Swiper τα overflow των slides */
+.swiper-slide{ overflow: visible; }
+
+/* Mobile tweaks (προαιρετικά) */
+@media (max-width: 768px){
+  .slide-card{ width: 80vw; height: 60vh; }
+  .reflection{ height: 30%; }
+}
+.slide-meta{ position:absolute; left:14px; right:14px; bottom:14px; }
+/* Αν θέλεις ακόμα πιο «ανάλαφρο» look σαν το demo, μπορείς να δώσεις λίγο έξτρα bottom margin στο slide container, π.χ.: */
+.swiper-slide { padding-bottom: 48px; }  /* χώρο για reflection */

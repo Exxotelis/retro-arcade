@@ -19,10 +19,17 @@ import imgPacman   from "../assets/images/pacman.jpg"
 import imgChicken  from "../assets/images/chicken.jpg"
 
 function SlideCard({ title, subtitle, img, onPlay }) {
-  const src = img // το Vite δίνει τελικό URL με σωστό base
+  const src = img; // είτε ES import είτε base+url από public/
   return (
     <div className="slide-card">
-      <img src={src} alt={title} loading="lazy" />
+      <div className="cover">
+        <img className="cover-img" src={src} alt={title} loading="lazy" />
+        <div className="reflection" aria-hidden="true">
+          <img className="cover-img" src={src} alt="" />
+          <div className="reflection-fade" />
+        </div>
+      </div>
+
       <div className="slide-meta">
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:8}}>
           <span className="slide-title">{title}</span>
@@ -31,8 +38,9 @@ function SlideCard({ title, subtitle, img, onPlay }) {
         <button className="play-btn" onClick={onPlay}>▶ Play</button>
       </div>
     </div>
-  )
+  );
 }
+
 
 export default function Games(){
   const [showPong, setShowPong] = useState(false)
@@ -80,8 +88,6 @@ export default function Games(){
             768:  { slidesPerView: 2.2, spaceBetween: 16 },
             1024: { slidesPerView: 3,   spaceBetween: 20 },
           }}
-          loop={canLoop}
-          loopAdditionalSlides={2}
           allowTouchMove={!anyOpen} // πάγωμα όταν modal ανοιχτό
           coverflowEffect={{ rotate:0, stretch:0, depth:180, modifier:1.2, slideShadows:false }}
           navigation
