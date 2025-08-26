@@ -180,4 +180,5 @@ body{margin:0;background:#000;color:#e8eaf0;font-family:system-ui,-apple-system,
     width: 100% !important;
     height: 100% !important;
   }
+  .about-visual{display:flex;align-items:center;justify-content:center}
 }
