@@ -1,4 +1,4 @@
-// Games.jsx (Local-only)
+// Games.jsx
 import React, { useEffect, useMemo, useState } from "react"
 import PongModal from "./PongModal.jsx"
 import BreakoutModal from "./BreakoutModal.jsx"
@@ -12,26 +12,23 @@ import "swiper/css/effect-coverflow"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 
-// 🔒 Bullet-proof: κάνουμε import τις εικόνες από το public/
-// Ο Vite θα βάλει το σωστό BASE_URL (/ ή /static/spa/) στο build αυτόματα.
-import imgPong     from "/images/pong.jpg"
-import imgBreakout from "/images/breakout.jpg"
-import imgPacman   from "/images/pacman.jpg"
-import imgChicken  from "/images/chicken.jpg"
-// (προαιρετικό) placeholder αν έχεις
-// import imgFallback from "/images/placeholder.jpg"
+// >>> Import εικόνων από src/assets (όχι από public)
+import imgPong     from "../assets/images/pong.jpg"
+import imgBreakout from "../assets/images/breakout.jpg"
+import imgPacman   from "../assets/images/pacman.jpg"
+import imgChicken  from "../assets/images/chicken.jpg"
+// import imgFallback from "../assets/images/placeholder.jpg"
 
 function SlideCard({ title, subtitle, img, onPlay }) {
-  // το img είναι ήδη ΤΕΛΙΚΟ URL από τον Vite (δεν το ξανατυλίγουμε)
+  // το img είναι ΗΔΗ τελικό URL που έδωσε ο Vite (με σωστό base), δεν το πειράζουμε
   const src = img
-
   return (
     <div className="slide-card">
       <img
         src={src}
         alt={title}
         loading="lazy"
-        // onError={(e)=>{ e.currentTarget.src = imgFallback }} // αν έχεις placeholder
+        // onError={(e)=>{ e.currentTarget.src = imgFallback }}
       />
       <div className="slide-meta">
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:8}}>
@@ -45,23 +42,19 @@ function SlideCard({ title, subtitle, img, onPlay }) {
 }
 
 export default function Games(){
-  // Local modal states
   const [showPong, setShowPong] = useState(false)
   const [showBreakout, setShowBreakout] = useState(false)
   const [showPacman, setShowPacman] = useState(false)
   const [showChicken, setShowChicken] = useState(false)
-
-  // Page title based on selected slide
   const [activeTitle, setActiveTitle] = useState("Browse the Arcade")
 
-  // Lock body scroll when any modal is open
   useEffect(()=>{
     const anyOpen = showPong || showBreakout || showPacman || showChicken
     document.body.style.overflow = anyOpen ? "hidden" : ""
     return ()=>{ document.body.style.overflow = "" }
   }, [showPong, showBreakout, showPacman, showChicken])
 
-  // Local slides only (με τελικά URLs από τα imports)
+  // Χρησιμοποιούμε τα imported URLs ως έχουν
   const slides = useMemo(() => ([
     { type:"local-pong",     title:"PONG (Local)",        subtitle:"HTML5/Canvas",  img: imgPong },
     { type:"local-breakout", title:"Breakout (Local)",    subtitle:"React/Canvas",  img: imgBreakout },
@@ -96,70 +89,34 @@ export default function Games(){
         >
           {slides.map((item, idx) => (
             <SwiperSlide key={idx} style={{ width: 280 }}>
-              {item.type === 'local-pong' && (
-                <SlideCard {...item} onPlay={()=>setShowPong(true)} />
-              )}
-              {item.type === 'local-breakout' && (
-                <SlideCard {...item} onPlay={()=>setShowBreakout(true)} />
-              )}
-              {item.type === 'local-pacman' && (
-                <SlideCard {...item} onPlay={()=>setShowPacman(true)} />
-              )}
-              {item.type === 'local-chicken' && (
-                <SlideCard {...item} onPlay={()=>setShowChicken(true)} />
-              )}
+              {item.type === 'local-pong'     && <SlideCard {...item} onPlay={()=>setShowPong(true)} />}
+              {item.type === 'local-breakout' && <SlideCard {...item} onPlay={()=>setShowBreakout(true)} />}
+              {item.type === 'local-pacman'   && <SlideCard {...item} onPlay={()=>setShowPacman(true)} />}
+              {item.type === 'local-chicken'  && <SlideCard {...item} onPlay={()=>setShowChicken(true)} />}
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
 
-      {/* Local Pong modal */}
-      <PongModal
-        open={showPong}
-        onClose={()=>{
-          setShowPong(false)
-          setTimeout(()=>{
-            document.getElementById('home')?.scrollIntoView({behavior:'smooth'})
-            window.location.hash = '#home'
-          }, 0)
-        }}
-      />
+      <PongModal open={showPong} onClose={()=>{
+        setShowPong(false)
+        setTimeout(()=>{ document.getElementById('home')?.scrollIntoView({behavior:'smooth'}); window.location.hash='#home' }, 0)
+      }}/>
 
-      {/* Local Breakout modal */}
-      <BreakoutModal
-        open={showBreakout}
-        onClose={()=>{
-          setShowBreakout(false)
-          setTimeout(()=>{
-            document.getElementById('home')?.scrollIntoView({behavior:'smooth'})
-            window.location.hash = '#home'
-          }, 0)
-        }}
-      />
+      <BreakoutModal open={showBreakout} onClose={()=>{
+        setShowBreakout(false)
+        setTimeout(()=>{ document.getElementById('home')?.scrollIntoView({behavior:'smooth'}); window.location.hash='#home' }, 0)
+      }}/>
 
-      {/* Local Pacman modal */}
-      <PacmanModal
-        open={showPacman}
-        onClose={()=>{
-          setShowPacman(false)
-          setTimeout(()=>{
-            document.getElementById('home')?.scrollIntoView({behavior:'smooth'})
-            window.location.hash = '#home'
-          }, 0)
-        }}
-      />
+      <PacmanModal open={showPacman} onClose={()=>{
+        setShowPacman(false)
+        setTimeout(()=>{ document.getElementById('home')?.scrollIntoView({behavior:'smooth'}); window.location.hash='#home' }, 0)
+      }}/>
 
-      {/* Local Chicken modal */}
-      <ChickenModal
-        open={showChicken}
-        onClose={()=>{
-          setShowChicken(false)
-          setTimeout(()=>{
-            document.getElementById('home')?.scrollIntoView({behavior:'smooth'})
-            window.location.hash = '#home'
-          }, 0)
-        }}
-      />
+      <ChickenModal open={showChicken} onClose={()=>{
+        setShowChicken(false)
+        setTimeout(()=>{ document.getElementById('home')?.scrollIntoView({behavior:'smooth'}); window.location.hash='#home' }, 0)
+      }}/>
     </section>
   )
 }
