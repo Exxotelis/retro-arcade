@@ -172,7 +172,7 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
 /* ===== Header layout + burger ===== */
 .app-header-inner{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr; /* logo | search | nav/burger */
+  grid-template-columns:1fr 1fr 1fr; 
   align-items:center;
 }
 .header-right{ justify-self:end; display:flex; align-items:center; gap:10px; }
@@ -182,20 +182,20 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
   color:#fff; border-radius:10px; padding:8px 10px; cursor:pointer;
 }
 @media (max-width: 900px){
-  .app-header-inner{ grid-template-columns:auto 1fr auto; } /* logo | search | burger */
+  .app-header-inner{ grid-template-columns:auto 1fr auto; } 
   .nav{ display:none; }
-  .menu-toggle{ display:inline-flex; }     /* burger εμφανές δεξιά */
+  .menu-toggle{ display:inline-flex; }     
   .nav.nav--open{
     display:flex; position:absolute; top:100%; right:0;
     background:rgba(0,0,0,0.92); border:1px solid rgba(255,255,255,.15);
     border-radius:12px; padding:10px 12px; flex-direction:column; gap:10px; z-index:50;
   }
-  .search{ justify-content:center; }       /* search στο κέντρο */
+  .search{ justify-content:center; }       
 }
 
 /* ===== Mobile tuning ===== */
 @media (max-width: 768px){
-  /* Safer fullbleed on mobile (avoid 100vw trap) */
+
   .fullbleed{
     width:100%;
     left:0; right:0;
@@ -205,7 +205,6 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
 
   .slide-card{ width:80vw; height:60vh; }
 
-  /* Modal as fullscreen with iOS-safe viewport units */
   .modal-surface{
     position:fixed; inset:0; width:100vw; height:100svh;
     border-radius:0; max-height:none;
@@ -214,13 +213,12 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
     padding:0; height:calc(100svh - 60px); /* ~60px header */
   }
 
-  /* Ensure about visuals never overflow horizontally */
+
   .about-visual, .showcase-display, .showcase-main{ max-width:100%; overflow:hidden }
 
-  /* Slightly relax container width to avoid sub-pixel overflow */
+
   .container{ width:min(100%, 92%); }
 
-  /* Keep visuals centered */
   .about-visual{ display:flex; align-items:center; justify-content:center }
 }
 
@@ -229,7 +227,7 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
   position: relative;
   width: 280px; height: 380px; /* ή ό,τι έχεις ήδη */
   border-radius: 18px;
-  /* μην κρύβεις το reflection - θα το χειριστούμε μέσα */
+ 
   overflow: visible; 
 }
 
@@ -237,7 +235,7 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
   position: relative;
   width: 100%; height: 100%;
   border-radius: 18px; 
-  overflow: hidden;              /* στρογγυλεμένες γωνίες μόνο στο κύριο cover */
+  overflow: hidden;              
   background:#0e1422;
   border:1px solid var(--border);
   box-shadow: 0 8px 30px rgba(0,0,0,.35);
@@ -247,16 +245,16 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
   width: 100%; height: 100%; object-fit: cover; display: block;
 }
 
-/* Η αντανάκλαση «κάτω από» το cover */
+
 .reflection{
   position: absolute;
   top: 100%;
   left: 0; right: 0;
-  height: 35%;                   /* πόσο ψηλή θες την αντανάκλαση */
+  height: 35%;                  
   transform: scaleY(-1);
   overflow: hidden;
   pointer-events: none;
-  opacity: .28;                  /* ένταση αντανάκλασης */
+  opacity: .28;                  
 }
 
 /* Το ίδιο image, καθρεφτισμένο */
@@ -272,14 +270,14 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
   background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.85) 80%, rgba(0,0,0,1));
 }
 
-/* Να μην «κόβει» το Swiper τα overflow των slides */
+
 .swiper-slide{ overflow: visible; }
 
-/* Mobile tweaks (προαιρετικά) */
+
 @media (max-width: 768px){
   .slide-card{ width: 80vw; height: 60vh; }
   .reflection{ height: 30%; }
 }
 .slide-meta{ position:absolute; left:14px; right:14px; bottom:14px; }
-/* Αν θέλεις ακόμα πιο «ανάλαφρο» look σαν το demo, μπορείς να δώσεις λίγο έξτρα bottom margin στο slide container, π.χ.: */
-.swiper-slide { padding-bottom: 48px; }  /* χώρο για reflection */
+
+.swiper-slide { padding-bottom: 48px; } 
