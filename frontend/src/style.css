@@ -223,61 +223,128 @@ img, canvas, iframe, video { max-width:100%; height:auto; display:block; }
 }
 
 /* --- Reflection for slide cards --- */
+/* --- Reflection overrides (υπερκαλύπτουν τα παλιά) --- */
 .slide-card{
   position: relative;
-  width: 280px; height: 380px; /* ή ό,τι έχεις ήδη */
+  width: 280px; height: 380px;
   border-radius: 18px;
- 
-  overflow: visible; 
+  overflow: visible !important;              /* ΔΕΝ κόβουμε την αντανάκλαση */
 }
 
+/* στρογγυλεμένες γωνίες/σκιά στο κύριο cover */
 .slide-card .cover{
   position: relative;
   width: 100%; height: 100%;
   border-radius: 18px; 
-  overflow: hidden;              
+  overflow: hidden;
   background:#0e1422;
   border:1px solid var(--border);
   box-shadow: 0 8px 30px rgba(0,0,0,.35);
 }
 
 .cover-img{
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
 }
 
-
+/* καθρεφτισμός ακριβώς κάτω από το cover */
 .reflection{
-  position: absolute;
-  top: 100%;
-  left: 0; right: 0;
-  height: 35%;                  
+  position: absolute; left: 0; right: 0; top: 100%;
+  height: 38%;
   transform: scaleY(-1);
-  overflow: hidden;
   pointer-events: none;
-  opacity: .28;                  
+  opacity: .28;
+  overflow: hidden;
 }
 
-/* Το ίδιο image, καθρεφτισμένο */
 .reflection .cover-img{
-  width: 100%; height: 100%; object-fit: cover; display:block;
-  filter: blur(0.4px);           /* πολύ ελαφρύ blur για ρεαλισμό */
+  width: 100%; height: 100%;
+  object-fit: cover; display:block;
+  filter: blur(0.4px);
 }
 
-/* Σβήσιμο προς τα κάτω */
 .reflection .reflection-fade{
-  content: "";
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.85) 80%, rgba(0,0,0,1));
+  background: linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0.85) 80%, rgba(0,0,0,1));
+  content: "";
 }
 
+/* ΜΗΝ κόβεις τα παιδιά του slide (να χωράει το reflection) */
+.swiper-slide{
+  overflow: visible !important;
+  padding-bottom: 56px !important; /* χώρος για την αντανάκλαση */
+}
 
-.swiper-slide{ overflow: visible; }
-
+/* Το container μπορεί να μείνει overflow:hidden για τις γειτονικές κάρτες */
+.swiper{ overflow: hidden; }
 
 @media (max-width: 768px){
   .slide-card{ width: 80vw; height: 60vh; }
-  .reflection{ height: 30%; }
+  .reflection{ height: 32%; }
+  .swiper-slide{ padding-bottom: 48px !important; }
 }
-.slide-meta{ position:absolute; left:14px; right:14px; bottom:14px; }
 
-.swiper-slide { padding-bottom: 48px; } 
+/* Προσωρινό debug: δες αν εμφανίζεται η ζώνη της αντανάκλασης
+.reflection{ outline: 1px dashed red; }
+*/
+
+    /* Reflection */
+        .slide-card .reflection {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            transform: scaleY(-1);
+            opacity: 0.2;
+            filter: blur(2px);
+            background: linear-gradient(to bottom, 
+                rgba(0, 0, 0, 0) 0%, 
+                rgba(0, 0, 0, 0.8) 50%, 
+                rgba(0, 0, 0, 1) 100%);
+            overflow: hidden;
+        }
+
+/* ===== Mobile Game HUD ===== */
+.mobile-hud{
+  position: fixed; inset: 0; pointer-events: none;
+}
+.hud-left, .hud-right{
+  position: absolute; bottom: 14px; pointer-events: auto;
+  display: flex; gap: 10px; align-items: center;
+}
+.hud-left{ left: 14px; }
+.hud-right{ right: 14px; }
+
+.dpad{
+  display: grid; grid-template-columns: 56px 56px 56px;
+  grid-template-rows: 56px 56px 56px; gap: 8px;
+}
+.hud-btn{
+  width:56px; height:56px; border-radius:16px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+  color:#fff; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 6px 14px rgba(0,0,0,.35);
+  user-select:none; -webkit-user-select:none;
+  touch-action: manipulation;
+}
+.hud-btn:active{ transform: scale(0.96); }
+
+/* Ζώνη swipe-joystick πάνω από την canvas */
+.touch-layer{
+  position:absolute; inset:0;
+  touch-action: none; /* επιτρέπουμε ελεύθερο drag */
+}
+
+/* Γενικές βελτιώσεις touch για όλο το app */
+html, body { overscroll-behavior: contain; }
+canvas { touch-action: none; }
+
+/* Σε μικρές οθόνες χώρεσε καλύτερα */
+@media (max-width: 768px){
+  .hud-btn{ width:54px; height:54px; border-radius:14px; }
+  .dpad{ grid-template-columns: 54px 54px 54px; grid-template-rows: 54px 54px 54px; gap:8px; }
+}

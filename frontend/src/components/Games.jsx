@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import PongModal from "./PongModal.jsx"
 import BreakoutModal from "./BreakoutModal.jsx"
-import { PacmanModal } from "./PacmanModal.jsx"
+import PacmanModal from "./PacmanModal.jsx"
 import ChickenModal from "./ChickenModal.jsx"
 
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -24,6 +24,7 @@ function SlideCard({ title, subtitle, img, onPlay }) {
     <div className="slide-card">
       <div className="cover">
         <img className="cover-img" src={src} alt={title} loading="lazy" />
+        {/* Reflection */}
         <div className="reflection" aria-hidden="true">
           <img className="cover-img" src={src} alt="" />
           <div className="reflection-fade" />
@@ -40,6 +41,7 @@ function SlideCard({ title, subtitle, img, onPlay }) {
     </div>
   );
 }
+
 
 
 export default function Games(){
