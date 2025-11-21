@@ -107,7 +107,7 @@ The `control-input` event includes the following details:
 
 ```typescript
 {
-  type: 'move' | 'action' | 'start' | 'stop',  // Event type
+  type: 'move' | 'action' | 'init' | 'stop',    // Event type
   direction?: 'up' | 'down' | 'left' | 'right', // For move events
   action?: 'primary' | 'secondary' | 'start',   // For action events
   pressed: boolean,                              // true on press, false on release
@@ -116,6 +116,12 @@ The `control-input` event includes the following details:
   timestamp: number                              // Event timestamp
 }
 ```
+
+**Event Types:**
+- `move` - Directional input (up/down/left/right)
+- `action` - Action button press (primary/secondary/start)
+- `init` - Module initialization (source: 'system')
+- `stop` - Module cleanup (source: 'system')
 
 ## Keyboard Mappings
 

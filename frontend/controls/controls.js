@@ -286,7 +286,7 @@
     
     // Dispatch init event
     dispatchControlEvent({
-      type: 'start',
+      type: 'init',
       pressed: true,
       source: 'system'
     });
@@ -348,7 +348,8 @@
   };
 
   // Auto-initialize if data attribute is present
-  if (document.currentScript && document.currentScript.hasAttribute('data-auto-init')) {
+  // Note: This feature requires static script loading and may not work with dynamic imports or some bundlers
+  if (typeof document !== 'undefined' && document.currentScript && document.currentScript.hasAttribute('data-auto-init')) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => init());
     } else {

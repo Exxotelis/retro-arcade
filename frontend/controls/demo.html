@@ -180,6 +180,14 @@
       font-size: 0.9rem;
     }
 
+    .controls-info pre {
+      margin-top: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+
     @media (max-width: 768px) {
       h1 {
         font-size: 2rem;
@@ -240,7 +248,7 @@
     <div class="controls-info">
       <h3>🔧 Integration Info</h3>
       <p>This demo shows the <code>control-input</code> event in action. To integrate into your app:</p>
-      <pre style="margin-top: 10px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 4px; overflow-x: auto;">
+      <pre>
 window.addEventListener('control-input', (event) => {
   const { type, direction, action, pressed, source } = event.detail;
   // Handle the input in your game logic
@@ -250,14 +258,6 @@ window.addEventListener('control-input', (event) => {
 
   <script src="controls.js"></script>
   <script>
-    // Initialize controls
-    window.Controls.init({
-      container: 'body',
-      showOnScreen: true,
-      keyboardEnabled: true,
-      position: 'bottom-center'
-    });
-
     // Game state
     const gameState = {
       playerX: 50,
@@ -366,15 +366,13 @@ window.addEventListener('control-input', (event) => {
     // Initialize player position
     updatePlayerPosition();
 
-    // Add welcome message
-    setTimeout(() => {
-      addLogEntry({
-        type: 'system',
-        source: 'demo',
-        pressed: true,
-        timestamp: Date.now()
-      });
-    }, 100);
+    // Initialize controls (after event listener is set up)
+    window.Controls.init({
+      container: 'body',
+      showOnScreen: true,
+      keyboardEnabled: true,
+      position: 'bottom-center'
+    });
   </script>
 </body>
 </html>
