@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controls Module Demo - Retro Arcade</title>
+  <link rel="stylesheet" href="controls.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-bottom: 200px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .info {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .info h2 {
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .info p {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .info code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    .game-area {
+      position: relative;
+      height: 400px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      margin-bottom: 30px;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .player {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(145deg, #4CAF50, #45a049);
+      border: 3px solid #fff;
+      border-radius: 8px;
+      transition: background 0.1s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .player.active {
+      background: linear-gradient(145deg, #ff5722, #e64a19);
+      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.6);
+    }
+
+    .event-log {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+    }
+
+    .event-log h3 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .event-entry {
+      margin-bottom: 8px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      border-left: 3px solid #4CAF50;
+    }
+
+    .event-entry.action {
+      border-left-color: #ff5722;
+    }
+
+    .event-entry.stop {
+      border-left-color: #2196F3;
+    }
+
+    .event-timestamp {
+      color: #aaa;
+      font-size: 0.85em;
+      margin-left: 10px;
+    }
+
+    .controls-info {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .controls-info ul {
+      list-style: none;
+      padding-left: 20px;
+    }
+
+    .controls-info li {
+      margin-bottom: 8px;
+    }
+
+    .controls-info li:before {
+      content: "▶ ";
+      color: #4CAF50;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .game-area {
+        height: 300px;
+      }
+
+      .info {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 Controls Module Demo</h1>
+
+    <div class="info">
+      <h2>How to Use</h2>
+      <p>Control the square using:</p>
+    </div>
+
+    <div class="controls-info">
+      <ul>
+        <li><strong>Keyboard:</strong> Arrow keys or WASD to move</li>
+        <li><strong>Keyboard:</strong> Space or Enter for action</li>
+        <li><strong>On-screen:</strong> Touch or click the control buttons below</li>
+      </ul>
+    </div>
+
+    <div class="game-area" id="gameArea">
+      <div class="player" id="player">🎮</div>
+    </div>
+
+    <div class="event-log" id="eventLog">
+      <h3>Event Log (Latest 10)</h3>
+      <div id="eventList"></div>
+    </div>
+  </div>
+
+  <script src="controls.js"></script>
+  <script>
+    // Initialize player position
+    const player = document.getElementById('player');
+    const gameArea = document.getElementById('gameArea');
+    const eventList = document.getElementById('eventList');
+    
+    let playerX = 175;
+    let playerY = 175;
+    const speed = 5;
+    const events = [];
+    const maxEvents = 10;
+
+    // Update player position
+    function updatePlayerPosition() {
+      player.style.left = playerX + 'px';
+      player.style.top = playerY + 'px';
+    }
+
+    // Add event to log
+    function logEvent(event) {
+      const timestamp = new Date(event.detail.timestamp).toLocaleTimeString();
+      const eventType = event.detail.type;
+      const direction = event.detail.direction || '';
+      const pressed = event.detail.pressed;
+      
+      let message = `[${eventType.toUpperCase()}]`;
+      if (direction) {
+        message += ` ${direction}`;
+      }
+      message += ` - pressed: ${pressed}`;
+      
+      events.unshift({
+        message,
+        timestamp,
+        type: eventType
+      });
+      
+      // Keep only last maxEvents
+      if (events.length > maxEvents) {
+        events.pop();
+      }
+      
+      // Update display
+      eventList.innerHTML = events.map(e => 
+        `<div class="event-entry ${e.type}">
+          <span>${e.message}</span>
+          <span class="event-timestamp">${e.timestamp}</span>
+        </div>`
+      ).join('');
+    }
+
+    // Handle control inputs
+    window.addEventListener('control-input', (event) => {
+      logEvent(event);
+      
+      const { type, direction, pressed } = event.detail;
+      
+      if (type === 'move' && pressed) {
+        // Move player
+        switch (direction) {
+          case 'up':
+            playerY = Math.max(0, playerY - speed);
+            break;
+          case 'down':
+            playerY = Math.min(gameArea.clientHeight - player.offsetHeight, playerY + speed);
+            break;
+          case 'left':
+            playerX = Math.max(0, playerX - speed);
+            break;
+          case 'right':
+            playerX = Math.min(gameArea.clientWidth - player.offsetWidth, playerX + speed);
+            break;
+        }
+        updatePlayerPosition();
+      } else if (type === 'action') {
+        // Toggle active state
+        if (pressed) {
+          player.classList.add('active');
+        } else {
+          player.classList.remove('active');
+        }
+      }
+    });
+
+    // Initialize controls
+    Controls.init({
+      repeatInterval: 50  // Fast movement for smooth gameplay
+    });
+
+    // Initial position
+    updatePlayerPosition();
+
+    // Log initialization
+    console.log('Controls Demo initialized');
+    console.log('Controls.isInitialized():', Controls.isInitialized());
+  </script>
+</body>
+</html>

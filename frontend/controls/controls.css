@@ -1,0 +1,188 @@
+/**
+ * Retro Arcade Controls Module - Styles
+ * Minimal responsive styling for on-screen controls
+ */
+
+.controls-panel {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
+}
+
+.controls-grid {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.controls-dpad {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 4px;
+}
+
+.controls-middle {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 4px;
+  align-items: center;
+}
+
+.controls-center {
+  width: 50px;
+  height: 50px;
+}
+
+.controls-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #fff;
+  background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+}
+
+.control-btn:hover {
+  background: linear-gradient(145deg, #3c3c3c, #2a2a2a);
+  border-color: #4CAF50;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.control-btn:active,
+.control-btn.pressed {
+  background: linear-gradient(145deg, #4CAF50, #45a049);
+  border-color: #4CAF50;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) inset;
+  transform: scale(0.95);
+}
+
+.control-up {
+  grid-column: 1;
+  justify-self: center;
+}
+
+.control-down {
+  grid-column: 1;
+  justify-self: center;
+}
+
+.control-action {
+  width: 70px;
+  height: 70px;
+  font-size: 24px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ff5722, #e64a19);
+  border-color: #ff5722;
+}
+
+.control-action:hover {
+  background: linear-gradient(145deg, #ff6b3d, #f4511e);
+  border-color: #ff6b3d;
+}
+
+.control-action:active,
+.control-action.pressed {
+  background: linear-gradient(145deg, #e64a19, #d84315);
+  border-color: #e64a19;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .controls-panel {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .controls-grid {
+    gap: 30px;
+    padding: 12px;
+  }
+  
+  .control-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 16px;
+  }
+  
+  .controls-center {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .control-action {
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .controls-panel {
+    bottom: 5px;
+  }
+  
+  .controls-grid {
+    gap: 20px;
+    padding: 10px;
+  }
+  
+  .control-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  .controls-center {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .control-action {
+    width: 55px;
+    height: 55px;
+    font-size: 20px;
+  }
+}
+
+/* Accessibility - High contrast mode */
+@media (prefers-contrast: high) {
+  .control-btn {
+    border-width: 3px;
+  }
+}
+
+/* Prevent text selection on touch devices */
+.controls-panel * {
+  -webkit-tap-highlight-color: transparent;
+}
