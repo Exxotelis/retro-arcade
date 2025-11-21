@@ -336,7 +336,7 @@
       
       // Limit log entries
       while (logEntries.children.length > MAX_LOG_ENTRIES) {
-        logEntries.removeChild(logEntries.lastChild);
+        logEntries.lastElementChild.remove();
       }
     }
 

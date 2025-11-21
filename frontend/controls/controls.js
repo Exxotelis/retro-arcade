@@ -269,8 +269,8 @@
     global.removeEventListener('keyup', handleKeyUp);
 
     // Remove DOM elements
-    if (controlsContainer && controlsContainer.parentNode) {
-      controlsContainer.parentNode.removeChild(controlsContainer);
+    if (controlsContainer) {
+      controlsContainer.remove();
     }
 
     // Clear state
