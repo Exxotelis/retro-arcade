@@ -257,7 +257,7 @@
       entry.className = 'log-entry';
       
       const time = new Date(detail.timestamp).toLocaleTimeString();
-      const typeClass = detail.type === 'action' ? 'event-type' : 'event-type';
+      const typeClass = 'event-type';
       const pressedClass = detail.pressed ? 'pressed-true' : 'pressed-false';
       
       let content = `<span class="timestamp">[${time}]</span> `;

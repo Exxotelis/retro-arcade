@@ -29,7 +29,6 @@
   let mountPoint = null;
   let controlsContainer = null;
   let activeKeys = new Set();
-  let keyRepeatTimers = {};
 
   // Configuration
   let config = {
@@ -162,12 +161,6 @@
 
     e.preventDefault();
     activeKeys.delete(keyId);
-
-    // Clear any repeat timer
-    if (keyRepeatTimers[keyId]) {
-      clearTimeout(keyRepeatTimers[keyId]);
-      delete keyRepeatTimers[keyId];
-    }
 
     const eventData = {
       ...mapping,
@@ -330,10 +323,6 @@
 
     // Clear state
     activeKeys.clear();
-    Object.keys(keyRepeatTimers).forEach(key => {
-      clearTimeout(keyRepeatTimers[key]);
-    });
-    keyRepeatTimers = {};
     controlsContainer = null;
     mountPoint = null;
     initialized = false;
