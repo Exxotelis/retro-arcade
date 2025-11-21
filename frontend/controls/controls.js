@@ -47,8 +47,6 @@
    * @param {boolean} pressed - true for keydown/click, false for keyup/release
    */
   function handleDirection(direction, pressed) {
-    const type = pressed ? 'start' : 'stop';
-    
     // Visual feedback
     const button = buttonRefs[direction];
     if (button) {
