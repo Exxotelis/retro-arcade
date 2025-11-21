@@ -331,7 +331,9 @@
       type: 'info',
       pressed: true
     });
-    logOutput.firstChild.innerHTML = '<span class="event-type">🎮 Controls Ready!</span> Start playing...';
+    if (logOutput.firstChild) {
+      logOutput.firstChild.innerHTML = '<span class="event-type">🎮 Controls Ready!</span> Start playing...';
+    }
   </script>
 </body>
 </html>
