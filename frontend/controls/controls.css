@@ -1,0 +1,217 @@
+/**
+ * Retro Arcade Controls Styles
+ * Minimal, responsive, mobile-friendly styling
+ */
+
+.controls-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  z-index: 1000;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* D-pad container - 3x3 grid */
+.controls-dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+}
+
+/* Base button styles */
+.controls-btn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Direction buttons positioning */
+.controls-btn-up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.controls-btn-left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.controls-btn-center {
+  grid-column: 2;
+  grid-row: 2;
+  opacity: 0;
+  cursor: default;
+  box-shadow: none;
+}
+
+.controls-btn-right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.controls-btn-down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+/* Action button */
+.controls-btn-action {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  font-size: 28px;
+}
+
+/* Dark theme (default) */
+.controls-panel[data-theme="dark"] .controls-btn:not(.controls-btn-center) {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  color: #ffffff;
+  border: 2px solid #444;
+}
+
+.controls-panel[data-theme="dark"] .controls-btn:not(.controls-btn-center):hover {
+  background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.controls-panel[data-theme="dark"] .controls-btn.pressed {
+  background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border-color: #00ff88;
+}
+
+/* Light theme */
+.controls-panel[data-theme="light"] .controls-btn:not(.controls-btn-center) {
+  background: linear-gradient(145deg, #ffffff, #e0e0e0);
+  color: #333333;
+  border: 2px solid #ccc;
+}
+
+.controls-panel[data-theme="light"] .controls-btn:not(.controls-btn-center):hover {
+  background: linear-gradient(145deg, #f5f5f5, #d0d0d0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.controls-panel[data-theme="light"] .controls-btn.pressed {
+  background: linear-gradient(145deg, #d0d0d0, #c0c0c0);
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-color: #00aa66;
+}
+
+/* Retro theme */
+.controls-panel[data-theme="retro"] .controls-btn:not(.controls-btn-center) {
+  background: linear-gradient(145deg, #8b5cf6, #7c3aed);
+  color: #00ff00;
+  border: 3px solid #00ff00;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+.controls-panel[data-theme="retro"] .controls-btn:not(.controls-btn-center):hover {
+  background: linear-gradient(145deg, #9b6cf6, #8c4aed);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(139, 92, 246, 0.5);
+}
+
+.controls-panel[data-theme="retro"] .controls-btn.pressed {
+  background: linear-gradient(145deg, #7c3aed, #6d28d9);
+  transform: translateY(1px);
+  box-shadow: 0 0 15px #00ff00;
+  border-color: #ffff00;
+  text-shadow: 0 0 10px #ffff00;
+}
+
+/* Size variations */
+.controls-panel[data-size="small"] .controls-btn {
+  width: 45px;
+  height: 45px;
+  font-size: 18px;
+}
+
+.controls-panel[data-size="small"] .controls-btn-action {
+  width: 55px;
+  height: 55px;
+  font-size: 22px;
+}
+
+.controls-panel[data-size="large"] .controls-btn {
+  width: 75px;
+  height: 75px;
+  font-size: 28px;
+}
+
+.controls-panel[data-size="large"] .controls-btn-action {
+  width: 85px;
+  height: 85px;
+  font-size: 32px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .controls-panel {
+    bottom: 10px;
+    right: 10px;
+    gap: 15px;
+  }
+  
+  .controls-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  
+  .controls-btn-action {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .controls-panel {
+    bottom: 5px;
+    right: 5px;
+    gap: 10px;
+  }
+  
+  .controls-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .controls-btn-action {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+}
+
+/* Prevent text selection on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .controls-panel * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
