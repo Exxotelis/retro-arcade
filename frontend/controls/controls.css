@@ -1,0 +1,225 @@
+/**
+ * Retro Arcade Controls Styles
+ * Minimal, responsive styling for on-screen controls
+ */
+
+/* Main controls panel container */
+.controls-panel {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 60px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  user-select: none;
+  touch-action: none;
+}
+
+/* Theme variations */
+.controls-panel.controls-light {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.controls-panel.controls-dark {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* D-Pad container */
+.controls-dpad {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.controls-dpad-middle {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.controls-dpad-center {
+  width: 50px;
+  height: 50px;
+  background: transparent;
+}
+
+/* Action buttons container */
+.controls-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Base button styles */
+.control-btn {
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(50, 50, 50, 0.8);
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.control-btn:hover {
+  background: rgba(70, 70, 70, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.4);
+}
+
+.control-btn:active,
+.control-btn.pressed {
+  background: rgba(100, 100, 255, 0.9);
+  border-color: rgba(150, 150, 255, 0.8);
+  transform: translateY(1px);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Light theme button styles */
+.controls-light .control-btn {
+  background: rgba(220, 220, 220, 0.9);
+  color: #333;
+  border-color: rgba(100, 100, 100, 0.3);
+}
+
+.controls-light .control-btn:hover {
+  background: rgba(200, 200, 200, 1);
+  border-color: rgba(100, 100, 100, 0.5);
+}
+
+.controls-light .control-btn:active,
+.controls-light .control-btn.pressed {
+  background: rgba(100, 150, 255, 0.9);
+  color: #fff;
+  border-color: rgba(80, 120, 200, 0.8);
+}
+
+/* Action button specific style */
+.control-action {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  background: rgba(200, 50, 50, 0.8);
+  border-color: rgba(255, 100, 100, 0.5);
+}
+
+.control-action:hover {
+  background: rgba(220, 70, 70, 0.9);
+}
+
+.control-action:active,
+.control-action.pressed {
+  background: rgba(255, 100, 100, 0.9);
+  border-color: rgba(255, 150, 150, 0.8);
+}
+
+/* Size variations */
+.controls-small .control-btn {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.controls-small .controls-dpad-center {
+  width: 40px;
+  height: 40px;
+}
+
+.controls-small .control-action {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+}
+
+.controls-large .control-btn {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+}
+
+.controls-large .controls-dpad-center {
+  width: 60px;
+  height: 60px;
+}
+
+.controls-large .control-action {
+  width: 70px;
+  height: 70px;
+  font-size: 28px;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .controls-panel {
+    bottom: 10px;
+    padding: 15px;
+    gap: 40px;
+  }
+
+  .control-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+
+  .controls-dpad-center {
+    width: 45px;
+    height: 45px;
+  }
+
+  .control-action {
+    width: 55px;
+    height: 55px;
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .controls-panel {
+    bottom: 5px;
+    padding: 10px;
+    gap: 30px;
+  }
+
+  .control-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .controls-dpad-center {
+    width: 40px;
+    height: 40px;
+  }
+
+  .control-action {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+}
+
+/* Prevent text selection and improve touch experience */
+.controls-panel * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
