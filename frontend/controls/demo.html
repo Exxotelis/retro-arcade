@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retro Arcade Controls - Demo</title>
+  <link rel="stylesheet" href="controls.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 20px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #00d9ff;
+      text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+    }
+
+    .header p {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .demo-container {
+      flex: 1;
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .demo-area {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .player {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      border: 3px solid #fff;
+      border-radius: 4px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      transition: background 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .player.action-active {
+      background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+      transform: scale(1.1);
+    }
+
+    .log-panel {
+      width: 350px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .log-panel h2 {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #00d9ff;
+      text-align: center;
+    }
+
+    .log-output {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 0.85rem;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      line-height: 1.4;
+    }
+
+    .log-entry {
+      margin-bottom: 8px;
+      padding: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+      word-wrap: break-word;
+    }
+
+    .log-entry .timestamp {
+      color: #888;
+      font-size: 0.75rem;
+    }
+
+    .log-entry .event-type {
+      color: #00d9ff;
+      font-weight: bold;
+    }
+
+    .log-entry .direction {
+      color: #ffd700;
+    }
+
+    .log-entry .pressed-true {
+      color: #4ecdc4;
+    }
+
+    .log-entry .pressed-false {
+      color: #ff6b6b;
+    }
+
+    .controls-wrapper {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .controls-wrapper button {
+      padding: 10px 20px;
+      background: rgba(255, 107, 107, 0.8);
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: 'Courier New', monospace;
+      transition: all 0.2s ease;
+    }
+
+    .controls-wrapper button:hover {
+      background: rgba(255, 107, 107, 1);
+      transform: translateY(-2px);
+    }
+
+    .info-box {
+      margin-top: 15px;
+      padding: 10px;
+      background: rgba(0, 217, 255, 0.1);
+      border-left: 3px solid #00d9ff;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+
+    .info-box strong {
+      color: #00d9ff;
+    }
+
+    @media (max-width: 768px) {
+      .demo-container {
+        flex-direction: column;
+      }
+
+      .log-panel {
+        width: 100%;
+        max-height: 250px;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎮 Retro Arcade Controls Demo</h1>
+    <p>Use arrow keys, WASD, or on-screen buttons to move. Press Space/Enter or Action button to change color.</p>
+  </div>
+
+  <div class="demo-container">
+    <div class="demo-area" id="demo-area">
+      <div class="player" id="player">🎯</div>
+    </div>
+
+    <div class="log-panel">
+      <h2>📊 Event Log</h2>
+      <div class="log-output" id="log-output"></div>
+      <div class="info-box">
+        <strong>Keyboard Controls:</strong><br>
+        • Arrow Keys / WASD - Move<br>
+        • Space / Enter - Action<br>
+        <br>
+        <strong>On-Screen:</strong><br>
+        • D-Pad - Move<br>
+        • A Button - Action
+      </div>
+      <div class="controls-wrapper">
+        <button onclick="clearLog()">Clear Log</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="controls.js"></script>
+  <script>
+    // Initialize controls
+    window.Controls.init({
+      size: 'medium',
+      theme: 'dark'
+    });
+
+    // Player state
+    let player = document.getElementById('player');
+    let demoArea = document.getElementById('demo-area');
+    let logOutput = document.getElementById('log-output');
+    
+    let playerX = 50;
+    let playerY = 50;
+    let moveSpeed = 5;
+    let isActionActive = false;
+    let maxLogs = 50;
+
+    // Update player position
+    function updatePlayerPosition() {
+      const areaRect = demoArea.getBoundingClientRect();
+      const playerRect = player.getBoundingClientRect();
+      
+      // Keep player within bounds
+      playerX = Math.max(0, Math.min(playerX, areaRect.width - playerRect.width));
+      playerY = Math.max(0, Math.min(playerY, areaRect.height - playerRect.height));
+      
+      player.style.left = playerX + 'px';
+      player.style.top = playerY + 'px';
+    }
+
+    // Add log entry
+    function addLog(detail) {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      
+      const time = new Date(detail.timestamp).toLocaleTimeString();
+      const typeClass = 'event-type';
+      const pressedClass = detail.pressed ? 'pressed-true' : 'pressed-false';
+      
+      let content = `<span class="timestamp">[${time}]</span> `;
+      content += `<span class="${typeClass}">${detail.type.toUpperCase()}</span>`;
+      
+      if (detail.direction) {
+        content += ` <span class="direction">${detail.direction}</span>`;
+      }
+      
+      content += ` <span class="${pressedClass}">${detail.pressed ? '▼ DOWN' : '▲ UP'}</span>`;
+      
+      entry.innerHTML = content;
+      
+      logOutput.insertBefore(entry, logOutput.firstChild);
+      
+      // Limit log entries
+      while (logOutput.children.length > maxLogs) {
+        logOutput.removeChild(logOutput.lastChild);
+      }
+      
+      // Console log for debugging
+      console.log('Control Event:', detail);
+    }
+
+    // Clear log
+    function clearLog() {
+      logOutput.innerHTML = '';
+    }
+
+    // Handle control events
+    window.addEventListener('control-input', (event) => {
+      const detail = event.detail;
+      addLog(detail);
+
+      // Handle movement
+      if (detail.type === 'start' || (detail.type === 'move' && detail.pressed)) {
+        switch (detail.direction) {
+          case 'up':
+            playerY -= moveSpeed;
+            break;
+          case 'down':
+            playerY += moveSpeed;
+            break;
+          case 'left':
+            playerX -= moveSpeed;
+            break;
+          case 'right':
+            playerX += moveSpeed;
+            break;
+        }
+        updatePlayerPosition();
+      }
+
+      // Handle action
+      if (detail.type === 'action' && detail.pressed) {
+        isActionActive = !isActionActive;
+        if (isActionActive) {
+          player.classList.add('action-active');
+        } else {
+          player.classList.remove('action-active');
+        }
+      }
+    });
+
+    // Initialize player position
+    updatePlayerPosition();
+
+    // Add welcome message
+    addLog({
+      timestamp: Date.now(),
+      type: 'info',
+      pressed: true
+    });
+    if (logOutput.firstChild) {
+      logOutput.firstChild.innerHTML = '<span class="event-type">🎮 Controls Ready!</span> Start playing...';
+    }
+  </script>
+</body>
+</html>
