@@ -327,24 +327,20 @@
       }
     }
 
-    // Theme switching
-    function changeTheme(theme) {
-      Controls.destroy();
-      Controls.init({ theme: theme, size: currentSize });
-    }
-
-    let currentSize = 'medium';
-    function changeSize(size) {
-      currentSize = size;
-      Controls.destroy();
-      Controls.init({ theme: currentTheme, size: size });
-    }
-
+    // Theme and size switching
     let currentTheme = 'dark';
+    let currentSize = 'medium';
+    
     function changeTheme(theme) {
       currentTheme = theme;
       Controls.destroy();
       Controls.init({ theme: theme, size: currentSize });
+    }
+
+    function changeSize(size) {
+      currentSize = size;
+      Controls.destroy();
+      Controls.init({ theme: currentTheme, size: size });
     }
 
     // Reset player position

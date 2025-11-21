@@ -20,6 +20,11 @@
     action: null
   };
 
+  // Event listener references for cleanup
+  let keydownListener = null;
+  let keyupListener = null;
+  let blurListener = null;
+
   /**
    * Dispatch a control-input event
    * @param {Object} detail - Event detail object
@@ -264,17 +269,20 @@
     mountPoint.appendChild(container);
 
     // Setup keyboard listeners
-    document.addEventListener('keydown', (e) => handleKeyboard(e, true));
-    document.addEventListener('keyup', (e) => handleKeyboard(e, false));
+    keydownListener = (e) => handleKeyboard(e, true);
+    keyupListener = (e) => handleKeyboard(e, false);
+    document.addEventListener('keydown', keydownListener);
+    document.addEventListener('keyup', keyupListener);
 
     // Clear key states on blur to handle edge cases
-    global.addEventListener('blur', () => {
+    blurListener = () => {
       keyStates.clear();
       // Clear all button highlights
       Object.values(buttonRefs).forEach(btn => {
         if (btn) btn.classList.remove('pressed');
       });
-    });
+    };
+    global.addEventListener('blur', blurListener);
 
     console.log('Controls initialized');
   }
@@ -286,6 +294,20 @@
     if (!container) {
       console.warn('Controls not initialized.');
       return;
+    }
+
+    // Remove event listeners
+    if (keydownListener) {
+      document.removeEventListener('keydown', keydownListener);
+      keydownListener = null;
+    }
+    if (keyupListener) {
+      document.removeEventListener('keyup', keyupListener);
+      keyupListener = null;
+    }
+    if (blurListener) {
+      global.removeEventListener('blur', blurListener);
+      blurListener = null;
     }
 
     // Remove control panel
