@@ -120,6 +120,7 @@
       e.preventDefault();
       const eventData = {
         ...mapping,
+        type: mapping.type === 'move' ? 'move' : mapping.type,
         pressed: true
       };
       dispatchControlEvent(eventData);
