@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controls Module Demo - Retro Arcade</title>
+  <link rel="stylesheet" href="controls.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #ffd700;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      color: #ffd700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    .demo-container {
+      flex: 1;
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .game-area {
+      flex: 2;
+      background: rgba(0, 0, 0, 0.3);
+      border: 3px solid #ffd700;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .player {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ff00ff, #00ffff);
+      border: 2px solid #fff;
+      border-radius: 4px;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+      transition: all 0.05s linear;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .player.action-active {
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
+      transform: scale(1.2) rotate(180deg);
+    }
+
+    .info-panel {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #ffd700;
+      border-radius: 8px;
+      padding: 20px;
+      overflow-y: auto;
+      max-height: calc(100vh - 200px);
+    }
+
+    .info-panel h2 {
+      color: #ffd700;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      border-bottom: 1px solid #ffd700;
+      padding-bottom: 10px;
+    }
+
+    .stats {
+      margin-bottom: 20px;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .stat-label {
+      color: #aaa;
+    }
+
+    .stat-value {
+      color: #0ff;
+      font-weight: bold;
+    }
+
+    .event-log {
+      margin-top: 20px;
+    }
+
+    .event-log h3 {
+      color: #ffd700;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .log-entries {
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .log-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-entry .timestamp {
+      color: #888;
+      margin-right: 8px;
+    }
+
+    .log-entry.type-move { color: #0ff; }
+    .log-entry.type-action { color: #ff0; }
+    .log-entry.type-start { color: #0f0; }
+    .log-entry.type-stop { color: #f00; }
+
+    .instructions {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .instructions h3 {
+      color: #ffd700;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .instructions ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .instructions li {
+      padding: 4px 0;
+      color: #ccc;
+    }
+
+    .instructions li::before {
+      content: "▶ ";
+      color: #ffd700;
+      margin-right: 5px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .demo-container {
+        flex-direction: column;
+      }
+
+      .game-area {
+        min-height: 300px;
+      }
+
+      .info-panel {
+        max-height: 300px;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Scrollbar styling */
+    .log-entries::-webkit-scrollbar,
+    .info-panel::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .log-entries::-webkit-scrollbar-track,
+    .info-panel::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .log-entries::-webkit-scrollbar-thumb,
+    .info-panel::-webkit-scrollbar-thumb {
+      background: rgba(255, 215, 0, 0.5);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🕹️ Retro Arcade Controls Demo</h1>
+    <p>Use keyboard (Arrow Keys/WASD/Space) or on-screen controls</p>
+  </div>
+
+  <div class="demo-container">
+    <div class="game-area" id="gameArea">
+      <div class="player" id="player">🎮</div>
+    </div>
+
+    <div class="info-panel">
+      <h2>📊 Statistics</h2>
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-label">Position X:</span>
+          <span class="stat-value" id="posX">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Position Y:</span>
+          <span class="stat-value" id="posY">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Total Moves:</span>
+          <span class="stat-value" id="moveCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Actions:</span>
+          <span class="stat-value" id="actionCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Active Keys:</span>
+          <span class="stat-value" id="activeKeys">0</span>
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h3>🎯 Instructions</h3>
+        <ul>
+          <li>Use Arrow Keys or WASD to move</li>
+          <li>Press Space or Enter for action</li>
+          <li>Click/touch on-screen buttons</li>
+          <li>Action changes color and rotates</li>
+          <li>Check console for event details</li>
+        </ul>
+      </div>
+
+      <div class="event-log">
+        <h3>📝 Event Log</h3>
+        <div class="log-entries" id="logEntries"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="controls.js"></script>
+  <script>
+    // Game state
+    const gameState = {
+      x: 50,
+      y: 50,
+      moveCount: 0,
+      actionCount: 0,
+      activeKeys: new Set(),
+      speed: 5
+    };
+
+    // DOM elements
+    const player = document.getElementById('player');
+    const gameArea = document.getElementById('gameArea');
+    const logEntries = document.getElementById('logEntries');
+    const posXDisplay = document.getElementById('posX');
+    const posYDisplay = document.getElementById('posY');
+    const moveCountDisplay = document.getElementById('moveCount');
+    const actionCountDisplay = document.getElementById('actionCount');
+    const activeKeysDisplay = document.getElementById('activeKeys');
+
+    // Max log entries
+    const MAX_LOG_ENTRIES = 50;
+
+    // Initialize controls
+    window.Controls.init({
+      theme: 'retro',
+      size: 'medium'
+    });
+
+    // Log event to screen
+    function logEvent(event) {
+      const logEntry = document.createElement('div');
+      logEntry.className = `log-entry type-${event.type}`;
+      
+      const timestamp = new Date(event.timestamp).toLocaleTimeString('en-US', { 
+        hour12: false, 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        fractionalSecondDigits: 3
+      });
+      
+      let message = `[${event.type.toUpperCase()}]`;
+      if (event.direction) {
+        message += ` ${event.direction.toUpperCase()}`;
+      }
+      message += ` pressed=${event.pressed}`;
+      
+      logEntry.innerHTML = `<span class="timestamp">${timestamp}</span>${message}`;
+      
+      logEntries.insertBefore(logEntry, logEntries.firstChild);
+      
+      // Limit log entries
+      while (logEntries.children.length > MAX_LOG_ENTRIES) {
+        logEntries.removeChild(logEntries.lastChild);
+      }
+    }
+
+    // Update player position
+    function updatePlayerPosition() {
+      // Get game area dimensions
+      const areaRect = gameArea.getBoundingClientRect();
+      const playerRect = player.getBoundingClientRect();
+      
+      // Constrain to game area
+      gameState.x = Math.max(0, Math.min(areaRect.width - 40, gameState.x));
+      gameState.y = Math.max(0, Math.min(areaRect.height - 40, gameState.y));
+      
+      // Apply position
+      player.style.left = gameState.x + 'px';
+      player.style.top = gameState.y + 'px';
+      
+      // Update display
+      posXDisplay.textContent = Math.round(gameState.x);
+      posYDisplay.textContent = Math.round(gameState.y);
+    }
+
+    // Update statistics display
+    function updateStats() {
+      moveCountDisplay.textContent = gameState.moveCount;
+      actionCountDisplay.textContent = gameState.actionCount;
+      activeKeysDisplay.textContent = gameState.activeKeys.size;
+    }
+
+    // Handle control input
+    window.addEventListener('control-input', (event) => {
+      const { type, direction, pressed, timestamp } = event.detail;
+      
+      // Log to console and screen
+      console.log('Control Input:', event.detail);
+      logEvent(event.detail);
+      
+      // Track active keys
+      const keyId = direction ? `${type}-${direction}` : type;
+      if (type === 'start') {
+        gameState.activeKeys.add(keyId);
+      } else if (type === 'stop') {
+        gameState.activeKeys.delete(keyId);
+      }
+      
+      // Handle movement
+      if (type === 'move' && pressed) {
+        switch (direction) {
+          case 'up':
+            gameState.y -= gameState.speed;
+            break;
+          case 'down':
+            gameState.y += gameState.speed;
+            break;
+          case 'left':
+            gameState.x -= gameState.speed;
+            break;
+          case 'right':
+            gameState.x += gameState.speed;
+            break;
+        }
+        gameState.moveCount++;
+        updatePlayerPosition();
+      }
+      
+      // Handle action
+      if (type === 'action') {
+        if (pressed) {
+          player.classList.add('action-active');
+          gameState.actionCount++;
+        } else {
+          player.classList.remove('action-active');
+        }
+      }
+      
+      updateStats();
+    });
+
+    // Initialize player position
+    updatePlayerPosition();
+    updateStats();
+
+    // Handle window resize
+    window.addEventListener('resize', updatePlayerPosition);
+
+    console.log('Demo initialized! Use Arrow Keys, WASD, Space/Enter, or on-screen controls.');
+  </script>
+</body>
+</html>

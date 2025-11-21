@@ -1,0 +1,369 @@
+/**
+ * Retro Arcade Controls Styles
+ * Responsive, mobile-friendly styling for on-screen game controls
+ */
+
+/* Container and Layout */
+.controls-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
+}
+
+.controls-panel {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* D-Pad Layout */
+.controls-dpad {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 4px;
+  justify-items: center;
+}
+
+.dpad-middle {
+  display: flex;
+  gap: 4px;
+}
+
+/* Action Buttons */
+.controls-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Button Base Styles */
+.control-btn {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.control-btn:active,
+.control-btn.pressed {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn-arrow {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.btn-label {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Action Button Styling */
+.btn-action {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 50, 50, 0.3);
+  border: 2px solid rgba(255, 50, 50, 0.5);
+}
+
+.btn-action:hover {
+  background: rgba(255, 50, 50, 0.4);
+  border-color: rgba(255, 50, 50, 0.7);
+}
+
+.btn-action:active,
+.btn-action.pressed {
+  background: rgba(255, 50, 50, 0.6);
+  border-color: rgba(255, 50, 50, 0.9);
+}
+
+/* Size Variants */
+.controls-small .control-btn {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.controls-small .btn-arrow {
+  font-size: 18px;
+}
+
+.controls-small .btn-action {
+  width: 48px;
+  height: 48px;
+}
+
+.controls-small .controls-panel {
+  gap: 30px;
+  padding: 12px;
+}
+
+.controls-large .control-btn {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+}
+
+.controls-large .btn-arrow {
+  font-size: 28px;
+}
+
+.controls-large .btn-action {
+  width: 72px;
+  height: 72px;
+}
+
+.controls-large .controls-panel {
+  gap: 50px;
+  padding: 18px;
+}
+
+/* Theme: Retro (Default) */
+.controls-retro .controls-panel {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.8), rgba(75, 0, 130, 0.8));
+  border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.controls-retro .control-btn {
+  background: rgba(255, 215, 0, 0.2);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  color: #ffd700;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.controls-retro .control-btn:hover {
+  background: rgba(255, 215, 0, 0.3);
+  border-color: rgba(255, 215, 0, 0.6);
+}
+
+.controls-retro .control-btn:active,
+.controls-retro .control-btn.pressed {
+  background: rgba(255, 215, 0, 0.5);
+  border-color: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.controls-retro .btn-action {
+  background: rgba(255, 0, 255, 0.3);
+  border: 2px solid rgba(255, 0, 255, 0.5);
+  color: #ff00ff;
+  text-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+}
+
+.controls-retro .btn-action:hover {
+  background: rgba(255, 0, 255, 0.4);
+  border-color: rgba(255, 0, 255, 0.7);
+}
+
+.controls-retro .btn-action:active,
+.controls-retro .btn-action.pressed {
+  background: rgba(255, 0, 255, 0.6);
+  border-color: rgba(255, 0, 255, 0.9);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+}
+
+/* Theme: Dark */
+.controls-dark .controls-panel {
+  background: rgba(20, 20, 25, 0.95);
+  border: 1px solid rgba(100, 100, 110, 0.3);
+}
+
+.controls-dark .control-btn {
+  background: rgba(60, 60, 70, 0.8);
+  border: 1px solid rgba(120, 120, 130, 0.5);
+  color: #e0e0e0;
+}
+
+.controls-dark .control-btn:hover {
+  background: rgba(80, 80, 90, 0.9);
+  border-color: rgba(140, 140, 150, 0.6);
+}
+
+.controls-dark .control-btn:active,
+.controls-dark .control-btn.pressed {
+  background: rgba(100, 100, 110, 1);
+  border-color: rgba(160, 160, 170, 0.8);
+}
+
+.controls-dark .btn-action {
+  background: rgba(220, 50, 50, 0.7);
+  border: 1px solid rgba(220, 50, 50, 0.9);
+}
+
+.controls-dark .btn-action:hover {
+  background: rgba(240, 60, 60, 0.8);
+}
+
+.controls-dark .btn-action:active,
+.controls-dark .btn-action.pressed {
+  background: rgba(255, 70, 70, 1);
+}
+
+/* Theme: Light */
+.controls-light .controls-panel {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(200, 200, 200, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.controls-light .control-btn {
+  background: rgba(230, 230, 240, 0.9);
+  border: 1px solid rgba(180, 180, 190, 0.8);
+  color: #333;
+}
+
+.controls-light .control-btn:hover {
+  background: rgba(210, 210, 220, 1);
+  border-color: rgba(160, 160, 170, 1);
+}
+
+.controls-light .control-btn:active,
+.controls-light .control-btn.pressed {
+  background: rgba(190, 190, 200, 1);
+  border-color: rgba(140, 140, 150, 1);
+}
+
+.controls-light .btn-action {
+  background: rgba(255, 80, 80, 0.8);
+  border: 1px solid rgba(200, 50, 50, 0.9);
+  color: #fff;
+}
+
+.controls-light .btn-action:hover {
+  background: rgba(255, 100, 100, 0.9);
+}
+
+.controls-light .btn-action:active,
+.controls-light .btn-action.pressed {
+  background: rgba(255, 120, 120, 1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .controls-container {
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .controls-panel {
+    gap: 25px;
+    padding: 10px;
+  }
+
+  .control-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+
+  .btn-arrow {
+    font-size: 20px;
+  }
+
+  .btn-action {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+@media (max-width: 480px) {
+  .controls-container {
+    bottom: 5px;
+    right: 5px;
+  }
+
+  .controls-panel {
+    gap: 20px;
+    padding: 8px;
+  }
+
+  .control-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .btn-arrow {
+    font-size: 18px;
+  }
+
+  .btn-action {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .controls-container {
+    bottom: 5px;
+    right: 5px;
+  }
+
+  .controls-panel {
+    gap: 15px;
+    padding: 6px;
+  }
+
+  .control-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+
+  .btn-arrow {
+    font-size: 16px;
+  }
+
+  .btn-action {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* Accessibility */
+.control-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Prevent text selection */
+.controls-container * {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
